@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EstateIQ — Smart Real Estate Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ========== NAVBAR ========== -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="logo">Estate<span>IQ</span></div>
+    <div class="nav-links">
+      <a href="#home" class="nav-link active" data-section="home">Home</a>
+      <a href="#" class="nav-link" onclick="showModule('listings')">Listings</a>
+      <a href="#" class="nav-link" onclick="showModule('predict')">Price Predictor</a>
+      <a href="#" class="nav-link" onclick="showModule('about')">About</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-ghost" onclick="openLogin()">Login</button>
+      <button class="btn-primary" onclick="openRegister()">Register</button>
+    </div>
+    <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</nav>
+
+<!-- ========== PAGES ========== -->
+<main id="app">
+
+  <!-- ===== HOME PAGE ===== -->
+  <section id="page-home" class="page active">
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-content">
+        <div class="hero-badge">AI-Powered · Decision Tree Pricing</div>
+        <h1>Find Your <em>Perfect</em><br/>Property</h1>
+        <p>Smart price predictions, verified listings, and direct buyer–seller communication — all in one place.</p>
+        <div class="hero-search">
+          <input type="text" placeholder="Search by city, area, or property type..." id="heroSearch"/>
+          <select id="heroType">
+            <option value="">Any Type</option>
+            <option>Apartment</option>
+            <option>Villa</option>
+            <option>Plot</option>
+            <option>Commercial</option>
+          </select>
+          <button class="btn-primary" onclick="doHeroSearch()">Search</button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><strong>2,400+</strong><span>Listings</span></div>
+          <div class="stat-div"></div>
+          <div class="stat"><strong>98%</strong><span>Prediction Accuracy</span></div>
+          <div class="stat-div"></div>
+          <div class="stat"><strong>1,200+</strong><span>Happy Users</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="property-card floating">
+          <div class="pc-img">🏡</div>
+          <div class="pc-info">
+            <div class="pc-tag">AI Price: ₹42L</div>
+            <div class="pc-title">3BHK Apartment</div>
+            <div class="pc-loc">📍 Anna Nagar, Chennai</div>
+          </div>
+        </div>
+        <div class="property-card floating delay-1">
+          <div class="pc-img">🏢</div>
+          <div class="pc-info">
+            <div class="pc-tag">AI Price: ₹78L</div>
+            <div class="pc-title">Commercial Space</div>
+            <div class="pc-loc">📍 T. Nagar, Chennai</div>
+          </div>
+        </div>
+        <div class="property-card floating delay-2">
+          <div class="pc-img">🏠</div>
+          <div class="pc-info">
+            <div class="pc-tag">AI Price: ₹55L</div>
+            <div class="pc-title">Independent Villa</div>
+            <div class="pc-loc">📍 Adyar, Chennai</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modules Preview -->
+    <div class="section-label">PLATFORM MODULES</div>
+    <h2 class="section-title">Everything you need</h2>
+    <div class="modules-grid">
+      <div class="module-card" onclick="showModule('listings')">
+        <div class="mc-icon">🏘️</div>
+        <h3>Property Listings</h3>
+        <p>Browse, filter, and compare thousands of verified properties with detailed info and AI valuations.</p>
+        <span class="mc-link">Explore →</span>
+      </div>
+      <div class="module-card" onclick="showModule('predict')">
+        <div class="mc-icon">🤖</div>
+        <h3>Price Predictor</h3>
+        <p>Enter property attributes and get an instant Decision Tree–based price estimate.</p>
+        <span class="mc-link">Try it →</span>
+      </div>
+      <div class="module-card" onclick="requireLogin('chat')">
+        <div class="mc-icon">💬</div>
+        <h3>Buyer–Seller Chat</h3>
+        <p>Communicate directly with buyers or sellers in real-time. No middlemen, no delays.</p>
+        <span class="mc-link">Login to Chat →</span>
+      </div>
+      <div class="module-card" onclick="showModule('feedback')">
+        <div class="mc-icon">⭐</div>
+        <h3>Reviews & Feedback</h3>
+        <p>Read genuine reviews from verified buyers and sellers. Rate your experience.</p>
+        <span class="mc-link">See Reviews →</span>
+      </div>
+      <div class="module-card" onclick="requireLogin('dashboard')">
+        <div class="mc-icon">📊</div>
+        <h3>My Dashboard</h3>
+        <p>Manage your listings, saved properties, chat history and more from one panel.</p>
+        <span class="mc-link">Login to Access →</span>
+      </div>
+      <div class="module-card" onclick="showModule('about')">
+        <div class="mc-icon">ℹ️</div>
+        <h3>About the Platform</h3>
+        <p>Learn about the technology, team, and mission behind EstateIQ.</p>
+        <span class="mc-link">Learn More →</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== LISTINGS PAGE ===== -->
+  <section id="page-listings" class="page">
+    <div class="page-header">
+      <h2>Property Listings</h2>
+      <p>Browse all available properties. Use filters to narrow your search.</p>
+    </div>
+    <div class="listings-toolbar">
+      <input type="text" placeholder="🔍  Search properties..." id="listSearch" oninput="filterListings()"/>
+      <select onchange="filterListings()" id="listType">
+        <option value="">All Types</option>
+        <option>Apartment</option><option>Villa</option><option>Plot</option><option>Commercial</option>
+      </select>
+      <select onchange="filterListings()" id="listBudget">
+        <option value="">Any Budget</option>
+        <option value="0-30">Under ₹30L</option>
+        <option value="30-60">₹30L – ₹60L</option>
+        <option value="60-100">₹60L – ₹1Cr</option>
+        <option value="100+">Above ₹1Cr</option>
+      </select>
+      <select onchange="filterListings()" id="listSort">
+        <option value="default">Sort: Featured</option>
+        <option value="price-asc">Price: Low → High</option>
+        <option value="price-desc">Price: High → Low</option>
+      </select>
+    </div>
+    <div id="listings-container" class="listings-grid"></div>
+  </section>
+
+  <!-- ===== PRICE PREDICTOR ===== -->
+  <section id="page-predict" class="page">
+    <div class="page-header">
+      <h2>AI Price Predictor</h2>
+      <p>Enter property details and our Decision Tree model will predict the estimated market price.</p>
+    </div>
+    <div class="predictor-wrap">
+      <div class="predictor-form">
+        <h3>Property Details</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Location / Area</label>
+            <select id="p-location">
+              <option>Anna Nagar</option><option>T. Nagar</option><option>Adyar</option>
+              <option>Velachery</option><option>Porur</option><option>OMR</option>
+              <option>Ambattur</option><option>Guindy</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Property Type</label>
+            <select id="p-type">
+              <option>Apartment</option><option>Villa</option><option>Plot</option><option>Commercial</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Area (sq ft)</label>
+            <input type="number" id="p-area" value="1200" min="200" max="10000"/>
+          </div>
+          <div class="form-group">
+            <label>Bedrooms</label>
+            <select id="p-rooms">
+              <option>1 BHK</option><option>2 BHK</option><option selected>3 BHK</option>
+              <option>4 BHK</option><option>5+ BHK</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Age of Property (years)</label>
+            <input type="number" id="p-age" value="3" min="0" max="50"/>
+          </div>
+          <div class="form-group">
+            <label>Floor</label>
+            <select id="p-floor">
+              <option>Ground</option><option>1st–3rd</option><option>4th–7th</option>
+              <option>8th–15th</option><option>15th+</option>
+            </select>
+          </div>
+        </div>
+        <div class="amenity-check">
+          <label><b>Amenities:</b></label>
+          <label><input type="checkbox" id="a-parking" checked/> Parking</label>
+          <label><input type="checkbox" id="a-gym"/> Gym</label>
+          <label><input type="checkbox" id="a-pool"/> Pool</label>
+          <label><input type="checkbox" id="a-security" checked/> Security</label>
+          <label><input type="checkbox" id="a-lift" checked/> Lift</label>
+        </div>
+        <button class="btn-primary btn-full" onclick="predictPrice()">🔮 Predict Price</button>
+      </div>
+      <div class="predictor-result" id="predictor-result">
+        <div class="result-placeholder">
+          <div style="font-size:3rem">🤖</div>
+          <p>Fill in the property details and click <strong>Predict Price</strong> to see the AI estimate.</p>
+        </div>
+      </div>
+    </div>
+    <div class="dt-explainer">
+      <h3>How the Decision Tree Works</h3>
+      <div class="dt-steps">
+        <div class="dt-step"><span>1</span><p><b>Input Features</b><br/>Location, area, rooms, age, amenities</p></div>
+        <div class="dt-arrow">→</div>
+        <div class="dt-step"><span>2</span><p><b>Tree Traversal</b><br/>Splits data by most impactful feature</p></div>
+        <div class="dt-arrow">→</div>
+        <div class="dt-step"><span>3</span><p><b>Leaf Node</b><br/>Reaches final price bucket</p></div>
+        <div class="dt-arrow">→</div>
+        <div class="dt-step"><span>4</span><p><b>Prediction</b><br/>Returns estimated market price</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEEDBACK PAGE ===== -->
+  <section id="page-feedback" class="page">
+    <div class="page-header">
+      <h2>Reviews & Feedback</h2>
+      <p>Genuine reviews from our community of buyers and sellers.</p>
+    </div>
+    <div id="feedback-list" class="feedback-grid"></div>
+    <div class="feedback-form-wrap">
+      <h3>Leave a Review</h3>
+      <p>You need to be logged in to submit feedback.</p>
+      <button class="btn-primary" onclick="openLogin()">Login to Review</button>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT PAGE ===== -->
+  <section id="page-about" class="page">
+    <div class="page-header">
+      <h2>About EstateIQ</h2>
+      <p>A smart real estate portal powered by machine learning.</p>
+    </div>
+    <div class="about-content">
+      <div class="about-block">
+        <h3>🎯 Aim</h3>
+        <p>Design and develop a smart real estate portal that uses a <b>Decision Tree algorithm</b> to predict property prices and recommend suitable properties to users, while enabling <b>direct buyer–seller communication</b>.</p>
+      </div>
+      <div class="about-block">
+        <h3>🔬 Technology</h3>
+        <p>The core ML model analyses attributes like location, area, rooms, and property age using a decision tree to predict fair market value. This reduces manual effort and enhances transparency.</p>
+      </div>
+      <div class="about-block">
+        <h3>👥 User Roles</h3>
+        <ul>
+          <li><b>Buyer</b> — Search, filter, predict, and chat with sellers.</li>
+          <li><b>Seller</b> — List properties, respond to inquiries, manage listings.</li>
+          <li><b>Admin</b> — Full platform control, moderation, analytics.</li>
+        </ul>
+      </div>
+      <div class="about-block">
+        <h3>🏗️ Development Model</h3>
+        <p>Built using the <b>Waterfall Model</b> — a structured, phase-wise approach covering requirement analysis, system design, implementation, testing, deployment, and maintenance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DASHBOARD (logged in) ===== -->
+  <section id="page-dashboard" class="page">
+    <div class="page-header">
+      <h2>My Dashboard</h2>
+      <p id="dash-welcome">Welcome back!</p>
+    </div>
+    <div id="dashboard-content"></div>
+  </section>
+
+  <!-- ===== CHAT PAGE (logged in) ===== -->
+  <section id="page-chat" class="page">
+    <div class="page-header">
+      <h2>Buyer–Seller Chat</h2>
+      <p>Direct communication — no intermediaries.</p>
+    </div>
+    <div class="chat-layout">
+      <div class="chat-sidebar">
+        <div class="chat-search"><input type="text" placeholder="Search conversations..."/></div>
+        <div id="chat-contacts"></div>
+      </div>
+      <div class="chat-main">
+        <div id="chat-messages"></div>
+        <div class="chat-input-row">
+          <input type="text" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChatMsg()"/>
+          <button onclick="sendChatMsg()">Send ➤</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ========== LOGIN MODAL ========== -->
+<div id="modal-login" class="modal-overlay" onclick="closeModal(event,'modal-login')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('modal-login').classList.remove('active')">✕</button>
+    <div class="modal-logo">Estate<span>IQ</span></div>
+    <h2>Welcome Back</h2>
+    <p class="modal-sub">Login to access all features</p>
+    <div class="role-tabs">
+      <button class="role-tab active" onclick="setRole('buyer',this)">Buyer / Seller</button>
+      <button class="role-tab" onclick="setRole('admin',this)">Admin</button>
+    </div>
+    <input type="hidden" id="login-role" value="buyer"/>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="you@example.com"/>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="••••••••"/>
+    </div>
+    <div id="login-error" class="form-error"></div>
+    <button class="btn-primary btn-full" onclick="doLogin()">Login</button>
+    <p class="modal-footer-text">Don't have an account? <a href="#" onclick="switchToRegister()">Register</a></p>
+    <div class="demo-hint">
+      <b>Demo accounts:</b><br/>
+      Admin: admin@estateiq.com / admin123<br/>
+      Buyer: buyer@estateiq.com / buyer123<br/>
+      Seller: seller@estateiq.com / seller123
+    </div>
+  </div>
+</div>
+
+<!-- ========== REGISTER MODAL ========== -->
+<div id="modal-register" class="modal-overlay" onclick="closeModal(event,'modal-register')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('modal-register').classList.remove('active')">✕</button>
+    <div class="modal-logo">Estate<span>IQ</span></div>
+    <h2>Create Account</h2>
+    <div class="role-tabs">
+      <button class="role-tab active" onclick="setRegRole('buyer',this)">Buyer</button>
+      <button class="role-tab" onclick="setRegRole('seller',this)">Seller</button>
+    </div>
+    <input type="hidden" id="reg-role" value="buyer"/>
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="reg-name" placeholder="Your Name"/>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="reg-email" placeholder="you@example.com"/>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="reg-password" placeholder="Create a password"/>
+    </div>
+    <div id="reg-error" class="form-error"></div>
+    <button class="btn-primary btn-full" onclick="doRegister()">Create Account</button>
+    <p class="modal-footer-text">Already have an account? <a href="#" onclick="switchToLogin()">Login</a></p>
+  </div>
+</div>
+
+<!-- ========== PROPERTY DETAIL MODAL ========== -->
+<div id="modal-property" class="modal-overlay wide" onclick="closeModal(event,'modal-property')">
+  <div class="modal-box wide-box">
+    <button class="modal-close" onclick="document.getElementById('modal-property').classList.remove('active')">✕</button>
+    <div id="property-detail-content"></div>
+  </div>
+</div>
+
+<!-- ========== TOAST ========== -->
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
